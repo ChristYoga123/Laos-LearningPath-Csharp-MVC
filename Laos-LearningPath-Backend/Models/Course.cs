@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace Laos_LearningPath_Backend.Models
 {
-    public class Couse
+    public class Course
     {
         [Key]
         public int id { get; set; }
@@ -16,7 +16,5 @@ namespace Laos_LearningPath_Backend.Models
         public int category_id { get; set; }
         public Category category { get; set; }
         public int price { get; set; }
-
-
     }
 }
