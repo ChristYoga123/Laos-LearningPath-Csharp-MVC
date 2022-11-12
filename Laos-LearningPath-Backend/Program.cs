@@ -1,8 +1,13 @@
+using Laos_LearningPath_Backend.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddDbContext<ApplicationDbContext>(
+    o => o.UseNpgsql(builder.Configuration.GetConnectionString("LaosDb"))
+    );
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
