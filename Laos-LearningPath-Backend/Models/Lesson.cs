@@ -12,5 +12,7 @@ namespace Laos_LearningPath_Backend.Models
         public string url { get; set; }
         [ForeignKey("Course")]
         public int course_id { get; set; }
+
+        public Course Course { get; set; }
     }
 }
