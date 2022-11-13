@@ -22,7 +22,8 @@ namespace Laos_LearningPath_Backend.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-              return View(await _context.courses.ToListAsync());
+            var applicationDbContext = _context.courses.Include(c => c.Category);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Courses/Details/5
@@ -34,6 +35,7 @@ namespace Laos_LearningPath_Backend.Controllers
             }
 
             var course = await _context.courses
+                .Include(c => c.Category)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (course == null)
             {
@@ -46,6 +48,7 @@ namespace Laos_LearningPath_Backend.Controllers
         // GET: Courses/Create
         public IActionResult Create()
         {
+            ViewData["category_id"] = new SelectList(_context.categories, "id", "name");
             return View();
         }
 
@@ -62,6 +65,7 @@ namespace Laos_LearningPath_Backend.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["category_id"] = new SelectList(_context.categories, "id", "name", course.category_id);
             return View(course);
         }
 
@@ -78,6 +82,7 @@ namespace Laos_LearningPath_Backend.Controllers
             {
                 return NotFound();
             }
+            ViewData["category_id"] = new SelectList(_context.categories, "id", "name", course.category_id);
             return View(course);
         }
 
@@ -113,6 +118,7 @@ namespace Laos_LearningPath_Backend.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["category_id"] = new SelectList(_context.categories, "id", "name", course.category_id);
             return View(course);
         }
 
@@ -125,6 +131,7 @@ namespace Laos_LearningPath_Backend.Controllers
             }
 
             var course = await _context.courses
+                .Include(c => c.Category)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (course == null)
             {
