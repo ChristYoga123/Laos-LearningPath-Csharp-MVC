@@ -11,7 +11,7 @@ namespace Laos_LearningPath_Backend.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.UseSerialColumns();
+            base.OnModelCreating(modelBuilder);
         }
         public DbSet<User> users { get; set; }
         public DbSet<Category> categories { get; set; }
