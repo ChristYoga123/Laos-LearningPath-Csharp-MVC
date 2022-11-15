@@ -10,92 +10,85 @@ using Laos_LearningPath_Backend.Models;
 
 namespace Laos_LearningPath_Backend.Controllers
 {
-    public class CoursesController : Controller
+    public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CoursesController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Courses
+        // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.courses.Include(c => c.Category);
-            return View(await applicationDbContext.ToListAsync());
+              return View(await _context.orders.ToListAsync());
         }
 
-        // GET: Courses/Details/5
+        // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.courses == null)
+            if (id == null || _context.orders == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.courses
-                .Include(c => c.Category)
+            var order = await _context.orders
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (course == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(course);
+            return View(order);
         }
 
-        // GET: Courses/Create
+        // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["category_id"] = new SelectList(_context.categories, "id", "name");
             return View();
         }
 
-        // POST: Courses/Create
+        // POST: Orders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,image,description,category_id,price")] Course course)
+        public async Task<IActionResult> Create([Bind("id,user_id,course_id,status")] Order order)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(course);
-                return RedirectToAction("Index");
+                _context.Add(order);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                ViewData["category_id"] = new SelectList(_context.categories, "id", "name", course.category_id);
-                return View(course);
-            }
+            return View(order);
         }
 
-        // GET: Courses/Edit/5
+        // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.courses == null)
+            if (id == null || _context.orders == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.courses.FindAsync(id);
-            if (course == null)
+            var order = await _context.orders.FindAsync(id);
+            if (order == null)
             {
                 return NotFound();
             }
-            ViewData["category_id"] = new SelectList(_context.categories, "id", "name", course.category_id);
-            return View(course);
+            return View(order);
         }
 
-        // POST: Courses/Edit/5
+        // POST: Orders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name,image,description,category_id,price")] Course course)
+        public async Task<IActionResult> Edit(int id, [Bind("id,user_id,course_id,status")] Order order)
         {
-            if (id != course.id)
+            if (id != order.id)
             {
                 return NotFound();
             }
@@ -104,12 +97,12 @@ namespace Laos_LearningPath_Backend.Controllers
             {
                 try
                 {
-                    _context.Update(course);
+                    _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CourseExists(course.id))
+                    if (!OrderExists(order.id))
                     {
                         return NotFound();
                     }
@@ -120,51 +113,49 @@ namespace Laos_LearningPath_Backend.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["category_id"] = new SelectList(_context.categories, "id", "name", course.category_id);
-            return View(course);
+            return View(order);
         }
 
-        // GET: Courses/Delete/5
+        // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.courses == null)
+            if (id == null || _context.orders == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.courses
-                .Include(c => c.Category)
+            var order = await _context.orders
                 .FirstOrDefaultAsync(m => m.id == id);
-            if (course == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(course);
+            return View(order);
         }
 
-        // POST: Courses/Delete/5
+        // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.courses == null)
+            if (_context.orders == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.courses'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.orders'  is null.");
             }
-            var course = await _context.courses.FindAsync(id);
-            if (course != null)
+            var order = await _context.orders.FindAsync(id);
+            if (order != null)
             {
-                _context.courses.Remove(course);
+                _context.orders.Remove(order);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CourseExists(int id)
+        private bool OrderExists(int id)
         {
-          return _context.courses.Any(e => e.id == id);
+          return _context.orders.Any(e => e.id == id);
         }
     }
 }

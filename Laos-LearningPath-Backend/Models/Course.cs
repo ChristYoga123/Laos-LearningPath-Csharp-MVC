@@ -14,7 +14,7 @@ namespace Laos_LearningPath_Backend.Models
         public string description { get; set; }
         [ForeignKey("Category")]
         public int category_id { get; set; }
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
         public int price { get; set; }
     }
 }
