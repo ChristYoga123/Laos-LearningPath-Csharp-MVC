@@ -22,7 +22,8 @@ namespace Laos_LearningPath_Backend.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-              return View(await _context.orders.ToListAsync());
+            var applicationDbContext = _context.orders.Include(o => o.Course).Include(o => o.User);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Orders/Details/5
@@ -34,6 +35,8 @@ namespace Laos_LearningPath_Backend.Controllers
             }
 
             var order = await _context.orders
+                .Include(o => o.Course)
+                .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (order == null)
             {
@@ -56,6 +59,8 @@ namespace Laos_LearningPath_Backend.Controllers
             {
                 return NotFound();
             }
+            ViewData["course_id"] = new SelectList(_context.courses, "id", "name", order.course_id);
+            ViewData["user_id"] = new SelectList(_context.users, "id", "name", order.user_id);
             return View(order);
         }
 
@@ -91,6 +96,8 @@ namespace Laos_LearningPath_Backend.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["course_id"] = new SelectList(_context.courses, "id", "name", order.course_id);
+            ViewData["user_id"] = new SelectList(_context.users, "id", "name", order.user_id);
             return View(order);
         }
 
