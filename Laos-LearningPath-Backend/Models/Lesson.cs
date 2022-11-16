@@ -13,6 +13,6 @@ namespace Laos_LearningPath_Backend.Models
         [ForeignKey("Course")]
         public int course_id { get; set; }
 
-        public Course Course { get; set; }
+        public Course? Course { get; set; }
     }
 }
