@@ -38,6 +38,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.is_admin)
             </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.id">Details</a>
+            </td>
         </tr>
 }
     </tbody>

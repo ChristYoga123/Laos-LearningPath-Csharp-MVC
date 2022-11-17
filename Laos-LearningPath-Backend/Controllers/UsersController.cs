@@ -20,21 +20,21 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return View(await _context.users.ToListAsync());
+              return View(_context.users.ToList());
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.users == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.users
-                .FirstOrDefaultAsync(m => m.id == id);
+            var user =_context.users
+                .FirstOrDefault(m => m.id == id);
             if (user == null)
             {
                 return NotFound();
