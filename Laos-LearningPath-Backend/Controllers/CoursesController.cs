@@ -20,23 +20,23 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Courses
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var applicationDbContext = _context.courses.Include(c => c.Category);
-            return View(await applicationDbContext.ToListAsync());
+            return View(applicationDbContext.ToList());
         }
 
         // GET: Courses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.courses == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.courses
+            var course = _context.courses
                 .Include(c => c.Category)
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefault(m => m.id == id);
             if (course == null)
             {
                 return NotFound();
@@ -57,12 +57,12 @@ namespace Laos_LearningPath_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,image,description,category_id,price")] Course course)
+        public IActionResult Create([Bind("id,name,image,description,category_id,price")] Course course)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(course);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["category_id"] = new SelectList(_context.categories, "id", "name", course.category_id);
@@ -70,14 +70,14 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Courses/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null || _context.courses == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.courses.FindAsync(id);
+            var course = _context.courses.Find(id);
             if (course == null)
             {
                 return NotFound();
@@ -91,7 +91,7 @@ namespace Laos_LearningPath_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name,image,description,category_id,price")] Course course)
+        public IActionResult Edit(int id, [Bind("id,name,image,description,category_id,price")] Course course)
         {
             if (id != course.id)
             {
@@ -103,7 +103,7 @@ namespace Laos_LearningPath_Backend.Controllers
                 try
                 {
                     _context.Update(course);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,16 +123,16 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Courses/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null || _context.courses == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.courses
+            var course = _context.courses
                 .Include(c => c.Category)
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefault(m => m.id == id);
             if (course == null)
             {
                 return NotFound();
@@ -144,19 +144,19 @@ namespace Laos_LearningPath_Backend.Controllers
         // POST: Courses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
             if (_context.courses == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.courses'  is null.");
             }
-            var course = await _context.courses.FindAsync(id);
+            var course = _context.courses.Find(id);
             if (course != null)
             {
                 _context.courses.Remove(course);
             }
             
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
