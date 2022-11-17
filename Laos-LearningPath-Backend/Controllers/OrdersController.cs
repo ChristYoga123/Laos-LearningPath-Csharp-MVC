@@ -20,24 +20,24 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var applicationDbContext = _context.orders.Include(o => o.Course).Include(o => o.User);
-            return View(await applicationDbContext.ToListAsync());
+            return View(applicationDbContext.ToList());
         }
 
         // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.orders == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.orders
+            var order = _context.orders
                 .Include(o => o.Course)
                 .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefault(m => m.id == id);
             if (order == null)
             {
                 return NotFound();
@@ -47,14 +47,14 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null || _context.orders == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.orders.FindAsync(id);
+            var order = _context.orders.Find(id);
             if (order == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace Laos_LearningPath_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,user_id,course_id,status")] Order order)
+        public IActionResult Edit(int id, [Bind("id,user_id,course_id,status")] Order order)
         {
             if (id != order.id)
             {
@@ -81,7 +81,7 @@ namespace Laos_LearningPath_Backend.Controllers
                 try
                 {
                     _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
