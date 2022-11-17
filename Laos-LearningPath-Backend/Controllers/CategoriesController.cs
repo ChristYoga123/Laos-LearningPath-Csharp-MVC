@@ -20,21 +20,21 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Categories
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return View(await _context.categories.ToListAsync());
+              return View(_context.categories.ToList());
         }
 
         // GET: Categories/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.categories == null)
             {
                 return NotFound();
             }
 
-            var category = await _context.categories
-                .FirstOrDefaultAsync(m => m.id == id);
+            var category = _context.categories
+                .FirstOrDefault(m => m.id == id);
             if (category == null)
             {
                 return NotFound();
@@ -54,26 +54,26 @@ namespace Laos_LearningPath_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name")] Category category)
+        public IActionResult Create([Bind("id,name")] Category category)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(category);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
 
         // GET: Categories/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null || _context.categories == null)
             {
                 return NotFound();
             }
 
-            var category = await _context.categories.FindAsync(id);
+            var category = _context.categories.Find(id);
             if (category == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace Laos_LearningPath_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name")] Category category)
+        public IActionResult Edit(int id, [Bind("id,name")] Category category)
         {
             if (id != category.id)
             {
@@ -98,7 +98,7 @@ namespace Laos_LearningPath_Backend.Controllers
                 try
                 {
                     _context.Update(category);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,15 +117,15 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Categories/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null || _context.categories == null)
             {
                 return NotFound();
             }
 
-            var category = await _context.categories
-                .FirstOrDefaultAsync(m => m.id == id);
+            var category = _context.categories
+                .FirstOrDefault(m => m.id == id);
             if (category == null)
             {
                 return NotFound();
@@ -137,19 +137,19 @@ namespace Laos_LearningPath_Backend.Controllers
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
             if (_context.categories == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.categories'  is null.");
             }
-            var category = await _context.categories.FindAsync(id);
+            var category = _context.categories.Find(id);
             if (category != null)
             {
                 _context.categories.Remove(category);
             }
             
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
