@@ -20,23 +20,23 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Lessons
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var applicationDbContext = _context.lessons.Include(l => l.Course);
-            return View(await applicationDbContext.ToListAsync());
+            return View(applicationDbContext.ToList());
         }
 
         // GET: Lessons/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.lessons == null)
             {
                 return NotFound();
             }
 
-            var lesson = await _context.lessons
+            var lesson = _context.lessons
                 .Include(l => l.Course)
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefault(m => m.id == id);
             if (lesson == null)
             {
                 return NotFound();
@@ -57,12 +57,12 @@ namespace Laos_LearningPath_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,url,course_id")] Lesson lesson)
+        public IActionResult Create([Bind("id,name,url,course_id")] Lesson lesson)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(lesson);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["course_id"] = new SelectList(_context.courses, "id", "name", lesson.course_id);
@@ -70,14 +70,14 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Lessons/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null || _context.lessons == null)
             {
                 return NotFound();
             }
 
-            var lesson = await _context.lessons.FindAsync(id);
+            var lesson = _context.lessons.Find(id);
             if (lesson == null)
             {
                 return NotFound();
@@ -91,7 +91,7 @@ namespace Laos_LearningPath_Backend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name,url,course_id")] Lesson lesson)
+        public IActionResult Edit(int id, [Bind("id,name,url,course_id")] Lesson lesson)
         {
             if (id != lesson.id)
             {
@@ -103,7 +103,7 @@ namespace Laos_LearningPath_Backend.Controllers
                 try
                 {
                     _context.Update(lesson);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,16 +123,16 @@ namespace Laos_LearningPath_Backend.Controllers
         }
 
         // GET: Lessons/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null || _context.lessons == null)
             {
                 return NotFound();
             }
 
-            var lesson = await _context.lessons
+            var lesson = _context.lessons
                 .Include(l => l.Course)
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefault(m => m.id == id);
             if (lesson == null)
             {
                 return NotFound();
@@ -144,19 +144,19 @@ namespace Laos_LearningPath_Backend.Controllers
         // POST: Lessons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
             if (_context.lessons == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.lessons'  is null.");
             }
-            var lesson = await _context.lessons.FindAsync(id);
+            var lesson = _context.lessons.Find(id);
             if (lesson != null)
             {
                 _context.lessons.Remove(lesson);
             }
             
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
