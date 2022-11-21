@@ -53,6 +53,10 @@ namespace Laos_LearningPath_Backend.Controllers
 
         public IActionResult Login()
         {
+            if (HttpContext.Session.GetString("id") != null)
+            {
+                return RedirectToAction("Index");
+            }
             return View();
         }
 
