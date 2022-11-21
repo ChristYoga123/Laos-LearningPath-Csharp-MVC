@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Laos_LearningPath_Backend.Data;
 using Laos_LearningPath_Backend.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Laos_LearningPath_Backend.Controllers
 {
@@ -22,7 +23,14 @@ namespace Laos_LearningPath_Backend.Controllers
         // GET: Users
         public IActionResult Index()
         {
-              return View(_context.users.ToList());
+            if(HttpContext.Session.GetString("id") != null)
+            {
+                return View(_context.users.ToList());
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
         }
 
         // GET: Users/Details/5
@@ -41,6 +49,30 @@ namespace Laos_LearningPath_Backend.Controllers
             }
 
             return View(user);
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(User user)
+        {
+            var usr = _context.users.Where(u => u.email.Equals(user.email) && u.password.Equals(user.password)).FirstOrDefault();
+            if (usr != null)
+            {
+                HttpContext.Session.SetString("id", usr.id.ToString());
+                HttpContext.Session.SetString("name", usr.name.ToString());
+                HttpContext.Session.SetString("is_admin", usr.is_admin.ToString());
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewBag.Notification = "User atau password salah";
+            }
+            return RedirectToAction("Login");
         }
                 
         private bool UserExists(int id)
