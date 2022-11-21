@@ -55,7 +55,10 @@ namespace Laos_LearningPath_Backend.Controllers
         {
             if (HttpContext.Session.GetString("id") != null)
             {
-                return RedirectToAction("Index");
+                if(HttpContext.Session.GetString("is_admin") == "true")
+                {
+                    return RedirectToAction("Index");
+                }
             }
             return View();
         }
