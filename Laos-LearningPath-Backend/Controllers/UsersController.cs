@@ -53,12 +53,15 @@ namespace Laos_LearningPath_Backend.Controllers
 
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetString("id") != null)
+            if(HttpContext.Session.GetString("id") != null)
             {
-                if(HttpContext.Session.GetString("is_admin") == "true")
+                if (HttpContext.Session.GetString("is_admin") != "True")
                 {
-                    return RedirectToAction("Index");
+                    ViewBag.Notification = "Anda bukan Admin. Dilarang masuk";
+                    return View();
                 }
+                
+                return RedirectToAction("Index"); 
             }
             return View();
         }
@@ -73,11 +76,11 @@ namespace Laos_LearningPath_Backend.Controllers
                 HttpContext.Session.SetString("id", usr.id.ToString());
                 HttpContext.Session.SetString("name", usr.name.ToString());
                 HttpContext.Session.SetString("is_admin", usr.is_admin.ToString());
-                return RedirectToAction("Index");
             }
             else
             {
                 ViewBag.Notification = "User atau password salah";
+                return View();
             }
             return RedirectToAction("Login");
         }
