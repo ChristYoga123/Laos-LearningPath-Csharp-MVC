@@ -84,6 +84,13 @@ namespace Laos_LearningPath_Backend.Controllers
             }
             return RedirectToAction("Login");
         }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
+        }
                 
         private bool UserExists(int id)
         {
